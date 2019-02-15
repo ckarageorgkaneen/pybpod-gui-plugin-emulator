@@ -35,7 +35,7 @@ setup(
     ),
     author='Luís Teixeira',
     author_email='micboucinha@gmail.com',
-    url='https://github.com/MicBoucinha/pybpod-gui-plugin-emulator',
+    url='https://bitbucket.org/fchampalimaud/pybpod-gui-plugin-emulator/',
     packages=find_packages('src'),
     package_dir={'': 'src'},
     package_data={'pybpod_gui_plugin_emulator': ['src/resources/*.*',]},
@@ -68,7 +68,7 @@ setup(
     project_urls={
         'Documentation': 'https://pybpod-gui-plugin-emulator.readthedocs.io/',
         'Changelog': 'https://pybpod-gui-plugin-emulator.readthedocs.io/en/latest/changelog.html',
-        'Issue Tracker': 'https://github.com/MicBoucinha/pybpod-gui-plugin-emulator/issues',
+        'Issue Tracker': 'https://bitbucket.org/fchampalimaud/pybpod-gui-plugin-emulator/issues',
     },
     keywords=[
         # eg: 'keyword1', 'keyword2', 'keyword3',
