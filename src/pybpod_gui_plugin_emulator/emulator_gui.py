@@ -2,13 +2,25 @@ from pybpodgui_plugin.utils import make_lambda_func
 from pyforms.basewidget import BaseWidget
 from pyforms_gui.controls.control_button import ControlButton
 from confapp import conf
+from pyforms_gui.controls.control_combo import ControlCombo
 from pyforms_gui.controls.control_label import ControlLabel
 
 
 class EmulatorGUI(BaseWidget):
 
-    def __init__(self, parent_win=None):
+    def __init__(self, parent_win=None, projects=None):
         BaseWidget.__init__(self, "Emulator", parent_win=parent_win)
+
+        self._projects = projects
+
+        # TODO: grab when window is shown again so we can rescan the experiments... or have a refresh button instead
+
+        self._experiments = ControlCombo('Experiments', changed_event=self.__experiments_combobox_changed_evt)
+        self._experiments.add_item('', None)
+        for exp in self._projects[0].experiments:
+            self._experiments.add_item(exp.name, exp)
+
+        self._setups = ControlCombo('Setups')
 
         self._valve_buttons = []
         self._valve_label = ControlLabel("Valve")
@@ -72,13 +84,13 @@ class EmulatorGUI(BaseWidget):
 
         for n in range(1, 5):
             btn_wire_in = ControlButton(str(n),
-                                       style="background-color:rgb(255,0,0);font-weight:bold;",
-                                       icon=conf.EMULATOR_PLUGIN_ICON,
-                                       checkable=True)
-            btn_wire_out = ControlButton(str(n),
                                         style="background-color:rgb(255,0,0);font-weight:bold;",
                                         icon=conf.EMULATOR_PLUGIN_ICON,
                                         checkable=True)
+            btn_wire_out = ControlButton(str(n),
+                                         style="background-color:rgb(255,0,0);font-weight:bold;",
+                                         icon=conf.EMULATOR_PLUGIN_ICON,
+                                         checkable=True)
 
             btn_wire_in.value = make_lambda_func(self.__button_on_click_evt, btn=btn_wire_in)
             btn_wire_out.value = make_lambda_func(self.__button_on_click_evt, btn=btn_wire_out)
@@ -89,6 +101,7 @@ class EmulatorGUI(BaseWidget):
             self._wire_out_buttons.append(btn_wire_out)
 
         self.formset = [
+            ('_experiments', '_setups'),
             'h5:Behaviour Ports',
             ('_valve_label', tuple([f'_btn_valve{n.label}' for n in self._valve_buttons])),
             ('_led_label', tuple([f'_btn_led{n.label}' for n in self._led_buttons])),
@@ -109,6 +122,14 @@ class EmulatorGUI(BaseWidget):
         ]
 
         self.set_margin(10)
+
+    def __experiments_combobox_changed_evt(self):
+        # TODO: when the dropdown selection is changed, get all the setups from it and present in the next dropdown
+        experiment = self._experiments.value
+        self._setups.clear()
+        self._setups.add_item('', None)
+        for setup in experiment.setups:
+            self._setups.add_item(setup.name, setup)
 
     @staticmethod
     def __button_on_click_evt(btn=None):

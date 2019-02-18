@@ -23,7 +23,7 @@ class ProjectsEmulator(object):
 
     def open_emulator_plugin(self):
         if not hasattr(self, 'emulator_plugin'):
-            self.emulator_plugin = EmulatorGUI(self)
+            self.emulator_plugin = EmulatorGUI(self, projects=self.projects)
             self.emulator_plugin.show()
             self.emulator_plugin.resize(*conf.EMULATOR_PLUGIN_WINDOW_SIZE)
         else:
