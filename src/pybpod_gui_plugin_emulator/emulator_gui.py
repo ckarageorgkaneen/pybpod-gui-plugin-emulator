@@ -2,18 +2,17 @@ from pybpodgui_plugin.utils import make_lambda_func
 from pyforms.basewidget import BaseWidget
 from pyforms_gui.controls.control_button import ControlButton
 from confapp import conf
-from pyforms_gui.controls.control_combo import ControlCombo
 from pyforms_gui.controls.control_label import ControlLabel
 
 
 class EmulatorGUI(BaseWidget):
 
-    def __init__(self, parent_win=None, projects=None):
+    def __init__(self, parent_win=None):
         BaseWidget.__init__(self, "Emulator", parent_win=parent_win)
 
-        self._projects = projects
-        self._experiments = ControlCombo('Experiments', changed_event=self.__experiments_combobox_changed_evt)
-        self._setups = ControlCombo('Setups')
+        self.setup = parent_win
+
+        self._currentSetup = ControlLabel(self.setup.name)
 
         self._valve_buttons = []
         self._valve_label = ControlLabel("Valve")
@@ -94,7 +93,7 @@ class EmulatorGUI(BaseWidget):
             self._wire_out_buttons.append(btn_wire_out)
 
         self.formset = [
-            ('_experiments', '_setups'),
+            ('h5:Current setup:', '_currentSetup'),
             'h5:Behaviour Ports',
             ('_valve_label', tuple([f'_btn_valve{n.label}' for n in self._valve_buttons])),
             ('_led_label', tuple([f'_btn_led{n.label}' for n in self._led_buttons])),
@@ -115,24 +114,6 @@ class EmulatorGUI(BaseWidget):
         ]
 
         self.set_margin(10)
-
-    def show(self):
-        # TODO: this should present also the different projects instead of getting only the first one
-        if self._projects:
-            self._experiments.clear()
-            self._experiments.add_item('', None)
-            for exp in self._projects[0].experiments:
-                self._experiments.add_item(exp.name, exp)
-
-        super(EmulatorGUI, self).show()
-
-    def __experiments_combobox_changed_evt(self):
-        experiment = self._experiments.value
-        if experiment:
-            self._setups.clear()
-            self._setups.add_item('', None)
-            for setup in experiment.setups:
-                self._setups.add_item(setup.name, setup)
 
     @staticmethod
     def __button_on_click_evt(btn=None):
