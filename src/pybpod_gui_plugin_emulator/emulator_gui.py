@@ -8,9 +8,10 @@ from pyforms_gui.controls.control_label import ControlLabel
 class EmulatorGUI(BaseWidget):
 
     def __init__(self, parent_win=None):
-        BaseWidget.__init__(self, "Emulator", parent_win=parent_win)
-
         self.setup = parent_win
+        title = 'Emulator for setup: ' + self.setup.name
+
+        BaseWidget.__init__(self, title, parent_win=parent_win)
 
         self._currentSetup = ControlLabel(self.setup.name)
 

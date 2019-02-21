@@ -11,7 +11,8 @@ class SetupWindowEmulator(SetupDockWindow):
 
         self._emulator = ControlButton('Test with emulator',
                                        default=self.__emulator_btn_evt,
-                                       icon=conf.EMULATOR_LAUNCH_ICON)
+                                       icon=conf.EMULATOR_LAUNCH_ICON,
+                                       enabled=False)
 
         self._formset = [
             '_name',
@@ -33,6 +34,21 @@ class SetupWindowEmulator(SetupDockWindow):
                 ],
             }
         ]
+
+    def show(self):
+        super().show()
+        if self._board.value and self._task.value:
+            self._emulator.enabled = True
+
+    def _task_changed_evt(self):
+        if hasattr(self, '_emulator'):
+            self._emulator.enabled = (self._task.value is not 0 and self._board.value is not 0)
+        super()._task_changed_evt()
+
+    def _board_changed_evt(self):
+        if hasattr(self, '_emulator'):
+            self._emulator.enabled = (self._board.value is not 0 and self._task.value is not 0)
+        super()._board_changed_evt()
 
     def __emulator_btn_evt(self):
         if not hasattr(self, 'emulator_plugin'):
