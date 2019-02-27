@@ -1,3 +1,5 @@
+import pyforms
+from pybpodgui_api.exceptions.run_setup import RunSetupError
 from pybpodgui_plugin.utils import make_lambda_func
 from pyforms.basewidget import BaseWidget
 from pyforms_gui.controls.control_button import ControlButton
@@ -14,6 +16,12 @@ class EmulatorGUI(BaseWidget):
         BaseWidget.__init__(self, title, parent_win=parent_win)
 
         self._currentSetup = ControlLabel(self.setup.name)
+        self._selectedBoard = ControlLabel(self.setup.board.name)
+        self._selectedProtocol = ControlLabel(self.setup.task.name)
+
+        self._run_task_btn = ControlButton('Run protocol',
+                                           default=self.__run_protocol_btn_evt,
+                                           checkable=True)
 
         self._valve_buttons = []
         self._valve_label = ControlLabel("Valve")
@@ -94,7 +102,14 @@ class EmulatorGUI(BaseWidget):
             self._wire_out_buttons.append(btn_wire_out)
 
         self.formset = [
-            ('h5:Current setup:', '_currentSetup'),
+            ('h5:Current setup:',
+             '_currentSetup',
+             'h5:Selected board:',
+             '_selectedBoard',
+             'h5:Selected protocol:',
+             '_selectedProtocol',
+             '_run_task_btn'),
+            '',
             'h5:Behaviour Ports',
             ('_valve_label', tuple([f'_btn_valve{n.label}' for n in self._valve_buttons])),
             ('_led_label', tuple([f'_btn_led{n.label}' for n in self._led_buttons])),
@@ -125,3 +140,19 @@ class EmulatorGUI(BaseWidget):
             btn.form.setStyleSheet("background-color:rgb(0,255,0);")
         else:
             btn.form.setStyleSheet("background-color:rgb(255,0,0);")
+
+    def __run_protocol_btn_evt(self):
+        try:
+            if self.setup.status == self.setup.STATUS_RUNNING_TASK:
+                self.setup.stop_task()
+            elif self.setup.status == self.setup.STATUS_READY:
+                self.setup.run_task()
+        except RunSetupError as err:
+            self.warning(str(err), "Warning")
+        except Exception as err:
+            self.alert(str(err), "Unexpected Error")
+        pass
+
+
+if __name__ == '__main__':
+    pyforms.start_app(EmulatorGUI, geometry=(0, 0, 300, 300))

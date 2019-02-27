@@ -1,1 +1,1 @@
-from .setup_window_emulator import SetupWindowEmulator as Setup
+from .setup_uibusy_emulator import SetupUIBusyEmulator as Setup
