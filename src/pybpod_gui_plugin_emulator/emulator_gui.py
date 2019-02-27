@@ -15,6 +15,9 @@ class EmulatorGUI(BaseWidget):
 
         BaseWidget.__init__(self, title, parent_win=parent_win)
 
+        self.CHECKED_ICON = conf.EMULATOR_CHECKED_ICON
+        self.UNCHECKED_ICON = conf.EMULATOR_UNCHECKED_ICON
+
         self._currentSetup = ControlLabel(self.setup.name)
         self._selectedBoard = ControlLabel(self.setup.board.name)
         self._selectedProtocol = ControlLabel(self.setup.task.name)
@@ -31,18 +34,9 @@ class EmulatorGUI(BaseWidget):
         self._poke_label = ControlLabel("Poke")
 
         for n in range(1, 9):
-            btn_valve = ControlButton(str(n),
-                                      style="background-color:rgb(255,0,0);font-weight:bold;",
-                                      icon=conf.EMULATOR_PLUGIN_ICON,
-                                      checkable=True)
-            btn_led = ControlButton(str(n),
-                                    style="background-color:rgb(255,0,0);font-weight:bold;",
-                                    icon=conf.EMULATOR_PLUGIN_ICON,
-                                    checkable=True)
-            btn_poke = ControlButton(str(n),
-                                     style="background-color:rgb(255,0,0);font-weight:bold;",
-                                     icon=conf.EMULATOR_PLUGIN_ICON,
-                                     checkable=True)
+            btn_valve = ControlButton(str(n), icon=self.UNCHECKED_ICON, checkable=True)
+            btn_led = ControlButton(str(n), icon=self.UNCHECKED_ICON, checkable=True)
+            btn_poke = ControlButton(str(n), icon=self.UNCHECKED_ICON, checkable=True)
 
             btn_valve.value = make_lambda_func(self.__button_on_click_evt, btn=btn_valve)
             btn_led.value = make_lambda_func(self.__button_on_click_evt, btn=btn_led)
@@ -61,14 +55,8 @@ class EmulatorGUI(BaseWidget):
         self._bnc_out_label = ControlLabel("BNC Out")
 
         for n in range(1, 3):
-            btn_bnc_in = ControlButton(str(n),
-                                       style="background-color:rgb(255,0,0);font-weight:bold;",
-                                       icon=conf.EMULATOR_PLUGIN_ICON,
-                                       checkable=True)
-            btn_bnc_out = ControlButton(str(n),
-                                        style="background-color:rgb(255,0,0);font-weight:bold;",
-                                        icon=conf.EMULATOR_PLUGIN_ICON,
-                                        checkable=True)
+            btn_bnc_in = ControlButton(str(n), icon=self.UNCHECKED_ICON, checkable=True)
+            btn_bnc_out = ControlButton(str(n), icon=self.UNCHECKED_ICON, checkable=True)
 
             btn_bnc_in.value = make_lambda_func(self.__button_on_click_evt, btn=btn_bnc_in)
             btn_bnc_out.value = make_lambda_func(self.__button_on_click_evt, btn=btn_bnc_out)
@@ -84,14 +72,8 @@ class EmulatorGUI(BaseWidget):
         self._wire_out_label = ControlLabel("Wire Out")
 
         for n in range(1, 5):
-            btn_wire_in = ControlButton(str(n),
-                                        style="background-color:rgb(255,0,0);font-weight:bold;",
-                                        icon=conf.EMULATOR_PLUGIN_ICON,
-                                        checkable=True)
-            btn_wire_out = ControlButton(str(n),
-                                         style="background-color:rgb(255,0,0);font-weight:bold;",
-                                         icon=conf.EMULATOR_PLUGIN_ICON,
-                                         checkable=True)
+            btn_wire_in = ControlButton(str(n), icon=self.UNCHECKED_ICON, checkable=True)
+            btn_wire_out = ControlButton(str(n), icon=self.UNCHECKED_ICON, checkable=True)
 
             btn_wire_in.value = make_lambda_func(self.__button_on_click_evt, btn=btn_wire_in)
             btn_wire_out.value = make_lambda_func(self.__button_on_click_evt, btn=btn_wire_out)
@@ -131,15 +113,14 @@ class EmulatorGUI(BaseWidget):
 
         self.set_margin(10)
 
-    @staticmethod
-    def __button_on_click_evt(btn=None):
+    def __button_on_click_evt(self, btn=None):
         if btn is None:
             return
 
         if btn.checked:
-            btn.form.setStyleSheet("background-color:rgb(0,255,0);")
+            btn.icon = self.CHECKED_ICON
         else:
-            btn.form.setStyleSheet("background-color:rgb(255,0,0);")
+            btn.icon = self.UNCHECKED_ICON
 
     def __run_protocol_btn_evt(self):
         try:
