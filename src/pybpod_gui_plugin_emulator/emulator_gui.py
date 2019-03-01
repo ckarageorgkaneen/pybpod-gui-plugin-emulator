@@ -1,4 +1,8 @@
+import io
+
 import pyforms
+from pybpodapi.com.arcom import ArduinoTypes
+from pybpodapi.com.protocol.send_msg_headers import SendMessageHeader
 from pybpodgui_api.exceptions.run_setup import RunSetupError
 from pybpodgui_plugin.utils import make_lambda_func
 from pyforms.basewidget import BaseWidget
@@ -119,6 +123,16 @@ class EmulatorGUI(BaseWidget):
 
         if btn.checked:
             btn.icon = self.CHECKED_ICON
+
+            #print("Preparing and sending message through stdin directly into the board.proc")
+
+            # TODO: prepare message and write to stdin
+            #message = ArduinoTypes.get_uint8_array([ord('V'), 5, 2])
+            message = b'trigger_input:B:1:255\n'
+
+            self.setup.board.proc.stdin.write(message)
+            self.setup.board.proc.stdin.flush()
+
         else:
             btn.icon = self.UNCHECKED_ICON
 
