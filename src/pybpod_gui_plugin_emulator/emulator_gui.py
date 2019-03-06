@@ -121,25 +121,38 @@ class EmulatorGUI(BaseWidget):
         if btn is None:
             return
 
-        if btn.checked:
-            btn.icon = self.CHECKED_ICON
+        if self.setup.status is not self.setup.STATUS_RUNNING_TASK:
+            return
 
-            #print("Preparing and sending message through stdin directly into the board.proc")
-
-            # TODO: prepare message and write to stdin
-            #message = ArduinoTypes.get_uint8_array([ord('V'), 5, 2])
-            message = b'trigger_input:B:1:255\n'
-
-            self.setup.board.proc.stdin.write(message)
-            self.setup.board.proc.stdin.flush()
-
+        name = btn.name.split('_')
+        port_name = name[2].upper()
+        is_input = False
+        if len(name) > 3:
+            port_number = name[3][-1]
+            is_input = name[3].startswith('in')
         else:
+            port_number = name[2][-1]
+
+        if btn.checked:
+            val = 0
+            btn.icon = self.CHECKED_ICON
+        else:
+            val = 255
             btn.icon = self.UNCHECKED_ICON
+
+        if is_input:
+            message = f'trigger_input:{port_name}:{port_number}:{val}'
+            self.setup.board.proc.stdin.write(message.encode('utf-8'))
+            self.setup.board.proc.stdin.flush()
+        else:
+            # TODO: missing out input types
+            message = f'trigger:{port_name}:{port_number}:{val}'
 
     def __run_protocol_btn_evt(self):
         try:
             if self.setup.status == self.setup.STATUS_RUNNING_TASK:
                 self.setup.stop_task()
+                # TODO: clear all buttons?
             elif self.setup.status == self.setup.STATUS_READY:
                 self.setup.run_task()
         except RunSetupError as err:
