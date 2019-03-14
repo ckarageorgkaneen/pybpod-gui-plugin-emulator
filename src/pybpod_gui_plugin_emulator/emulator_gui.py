@@ -37,7 +37,7 @@ class EmulatorGUI(BaseWidget):
         self._poke_buttons = []
         self._poke_label = ControlLabel("Poke")
 
-        for n in range(1, 9):
+        for n in range(1, 5):
             btn_valve = ControlButton(str(n), icon=self.UNCHECKED_ICON, checkable=True)
             btn_led = ControlButton(str(n), icon=self.UNCHECKED_ICON, checkable=True)
             btn_poke = ControlButton(str(n), icon=self.UNCHECKED_ICON, checkable=True)
@@ -47,7 +47,7 @@ class EmulatorGUI(BaseWidget):
             btn_poke.value = make_lambda_func(self.__button_on_click_evt, btn=btn_poke)
 
             setattr(self, f'_btn_valve{n}', btn_valve)
-            setattr(self, f'_btn_led{n}', btn_led)
+            setattr(self, f'_btn_pwm{n}', btn_led)
             setattr(self, f'_btn_poke{n}', btn_poke)
             self._valve_buttons.append(btn_valve)
             self._led_buttons.append(btn_led)
@@ -70,23 +70,6 @@ class EmulatorGUI(BaseWidget):
             self._bnc_in_buttons.append(btn_bnc_in)
             self._bnc_out_buttons.append(btn_bnc_out)
 
-        self._wire_in_buttons = []
-        self._wire_in_label = ControlLabel("Wire In")
-        self._wire_out_buttons = []
-        self._wire_out_label = ControlLabel("Wire Out")
-
-        for n in range(1, 5):
-            btn_wire_in = ControlButton(str(n), icon=self.UNCHECKED_ICON, checkable=True)
-            btn_wire_out = ControlButton(str(n), icon=self.UNCHECKED_ICON, checkable=True)
-
-            btn_wire_in.value = make_lambda_func(self.__button_on_click_evt, btn=btn_wire_in)
-            btn_wire_out.value = make_lambda_func(self.__button_on_click_evt, btn=btn_wire_out)
-
-            setattr(self, f'_btn_wire_in{n}', btn_wire_in)
-            setattr(self, f'_btn_wire_out{n}', btn_wire_out)
-            self._wire_in_buttons.append(btn_wire_in)
-            self._wire_out_buttons.append(btn_wire_out)
-
         self.formset = [
             ('h5:Current setup:',
              '_currentSetup',
@@ -98,19 +81,13 @@ class EmulatorGUI(BaseWidget):
             '',
             'h5:Behaviour Ports',
             ('_valve_label', tuple([f'_btn_valve{n.label}' for n in self._valve_buttons])),
-            ('_led_label', tuple([f'_btn_led{n.label}' for n in self._led_buttons])),
+            ('_led_label', tuple([f'_btn_pwm{n.label}' for n in self._led_buttons])),
             ('_poke_label', tuple([f'_btn_poke{n.label}' for n in self._poke_buttons])),
             'h5:BNC',
             ('_bnc_in_label',
              tuple([f'_btn_bnc_in{n.label}' for n in self._bnc_in_buttons]),
              '_bnc_out_label',
              tuple([f'_btn_bnc_out{n.label}' for n in self._bnc_out_buttons])
-             ),
-            'h5:Wire',
-            ('_wire_in_label',
-             tuple([f'_btn_wire_in{n.label}' for n in self._wire_in_buttons]),
-             '_wire_out_label',
-             tuple([f'_btn_wire_out{n.label}' for n in self._wire_out_buttons])
              ),
             ' '
         ]
@@ -131,22 +108,22 @@ class EmulatorGUI(BaseWidget):
             port_number = name[3][-1]
             is_input = name[3].startswith('in')
         else:
-            port_number = name[2][-1]
+            port_number = ''
 
         if btn.checked:
-            val = 0
+            val = 1
             btn.icon = self.CHECKED_ICON
         else:
-            val = 255
+            val = 0
             btn.icon = self.UNCHECKED_ICON
 
         if is_input:
-            message = f'trigger_input:{port_name}:{port_number}:{val}'
-            self.setup.board.proc.stdin.write(message.encode('utf-8'))
-            self.setup.board.proc.stdin.flush()
+            message = f'trigger_input:{port_name}{port_number}:{val}'
         else:
-            # TODO: missing out input types
-            message = f'trigger:{port_name}:{port_number}:{val}'
+            message = f'trigger_output:{port_name}{port_number}:{val}'
+        
+        self.setup.board.proc.stdin.write(message.encode('utf-8'))
+        self.setup.board.proc.stdin.flush()
 
     def __run_protocol_btn_evt(self):
         try:
