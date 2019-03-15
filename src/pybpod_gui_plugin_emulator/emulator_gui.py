@@ -46,9 +46,9 @@ class EmulatorGUI(BaseWidget):
             btn_led.value = make_lambda_func(self.__button_on_click_evt, btn=btn_led)
             btn_poke.value = make_lambda_func(self.__button_on_click_evt, btn=btn_poke)
 
-            setattr(self, f'_btn_valve{n}', btn_valve)
-            setattr(self, f'_btn_pwm{n}', btn_led)
-            setattr(self, f'_btn_poke{n}', btn_poke)
+            setattr(self, f'_btn_Valve{n}', btn_valve)
+            setattr(self, f'_btn_PWM{n}', btn_led)
+            setattr(self, f'_btn_Port{n}', btn_poke)
             self._valve_buttons.append(btn_valve)
             self._led_buttons.append(btn_led)
             self._poke_buttons.append(btn_poke)
@@ -65,8 +65,8 @@ class EmulatorGUI(BaseWidget):
             btn_bnc_in.value = make_lambda_func(self.__button_on_click_evt, btn=btn_bnc_in)
             btn_bnc_out.value = make_lambda_func(self.__button_on_click_evt, btn=btn_bnc_out)
 
-            setattr(self, f'_btn_bnc_in{n}', btn_bnc_in)
-            setattr(self, f'_btn_bnc_out{n}', btn_bnc_out)
+            setattr(self, f'_btn_BNC_in{n}', btn_bnc_in)
+            setattr(self, f'_btn_BNC_out{n}', btn_bnc_out)
             self._bnc_in_buttons.append(btn_bnc_in)
             self._bnc_out_buttons.append(btn_bnc_out)
 
@@ -80,14 +80,14 @@ class EmulatorGUI(BaseWidget):
              '_run_task_btn'),
             '',
             'h5:Behaviour Ports',
-            ('_valve_label', tuple([f'_btn_valve{n.label}' for n in self._valve_buttons])),
-            ('_led_label', tuple([f'_btn_pwm{n.label}' for n in self._led_buttons])),
-            ('_poke_label', tuple([f'_btn_poke{n.label}' for n in self._poke_buttons])),
+            ('_valve_label', tuple([f'_btn_Valve{n.label}' for n in self._valve_buttons])),
+            ('_led_label', tuple([f'_btn_PWM{n.label}' for n in self._led_buttons])),
+            ('_poke_label', tuple([f'_btn_Port{n.label}' for n in self._poke_buttons])),
             'h5:BNC',
             ('_bnc_in_label',
-             tuple([f'_btn_bnc_in{n.label}' for n in self._bnc_in_buttons]),
+             tuple([f'_btn_BNC_in{n.label}' for n in self._bnc_in_buttons]),
              '_bnc_out_label',
-             tuple([f'_btn_bnc_out{n.label}' for n in self._bnc_out_buttons])
+             tuple([f'_btn_BNC_out{n.label}' for n in self._bnc_out_buttons])
              ),
             ' '
         ]
@@ -102,26 +102,31 @@ class EmulatorGUI(BaseWidget):
             return
 
         name = btn.name.split('_')
-        port_name = name[2].upper()
-        is_input = False
+        port_name = name[2]
+        is_pwm = port_name.startswith('PWM')
+        is_valve = port_name.startswith('Valve')
+        is_output = is_pwm or is_valve
         if len(name) > 3:
             port_number = name[3][-1]
-            is_input = name[3].startswith('in')
+            is_output = name[3].startswith('out')
         else:
             port_number = ''
 
         if btn.checked:
             val = 1
+            if is_pwm:
+                val = 255
             btn.icon = self.CHECKED_ICON
         else:
             val = 0
             btn.icon = self.UNCHECKED_ICON
 
-        if is_input:
-            message = f'trigger_input:{port_name}{port_number}:{val}'
-        else:
+        if is_output:
             message = f'trigger_output:{port_name}{port_number}:{val}'
-        
+        else:
+            message = f'trigger_input:{port_name}{port_number}:{val}'
+            
+
         self.setup.board.proc.stdin.write(message.encode('utf-8'))
         self.setup.board.proc.stdin.flush()
 
