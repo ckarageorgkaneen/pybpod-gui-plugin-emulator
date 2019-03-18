@@ -29,6 +29,12 @@ class EmulatorGUI(BaseWidget):
         self._run_task_btn = ControlButton('Run protocol',
                                            default=self.__run_protocol_btn_evt,
                                            checkable=True)
+        self._stop_trial_btn = ControlButton('Stop trial',
+                                           default=self.__stop_trial_btn_evt,
+                                           enabled=False)
+        self._pause_btn = ControlButton('Pause',
+                                           default=self.__pause_btn_evt,
+                                           enabled=False)
 
         self._valve_buttons = []
         self._valve_label = ControlLabel("Valve")
@@ -71,13 +77,14 @@ class EmulatorGUI(BaseWidget):
             self._bnc_out_buttons.append(btn_bnc_out)
 
         self.formset = [
-            ('h5:Current setup:',
-             '_currentSetup',
-             'h5:Selected board:',
-             '_selectedBoard',
-             'h5:Selected protocol:',
-             '_selectedProtocol',
-             '_run_task_btn'),
+            ([('h5:Current setup:',
+             '_currentSetup'),
+              ('h5:Selected board:',
+             '_selectedBoard'),
+              ('h5:Selected protocol:',
+             '_selectedProtocol')],
+             '',
+             ['_run_task_btn', '_stop_trial_btn', '_pause_btn']),
             '',
             'h5:Behaviour Ports',
             ('_valve_label', tuple([f'_btn_Valve{n.label}' for n in self._valve_buttons])),
@@ -142,6 +149,18 @@ class EmulatorGUI(BaseWidget):
         except Exception as err:
             self.alert(str(err), "Unexpected Error")
         pass
+
+    def __stop_trial_btn_evt(self):
+        setup = self.setup
+        if setup:
+            setup._stop_trial_evt()
+        else:
+            self.critical("There isn't any setup selected. Please select one before continuing.", "No setup selected")
+
+    def __pause_btn_evt(self):
+        setup = self.setup
+        if setup:
+            setup._pause_evt()
 
 
 if __name__ == '__main__':
