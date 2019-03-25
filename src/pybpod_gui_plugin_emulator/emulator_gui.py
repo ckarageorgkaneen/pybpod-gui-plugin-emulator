@@ -9,6 +9,7 @@ from pyforms.basewidget import BaseWidget
 from pyforms_gui.controls.control_button import ControlButton
 from confapp import conf
 from pyforms_gui.controls.control_label import ControlLabel
+from pyforms_gui.controls.control_text import ControlText
 
 
 class EmulatorGUI(BaseWidget):
@@ -76,13 +77,25 @@ class EmulatorGUI(BaseWidget):
             self._bnc_in_buttons.append(btn_bnc_in)
             self._bnc_out_buttons.append(btn_bnc_out)
 
+        self._send_msg_buttons = []
+        self._control_text_bytes_msg = []
+        for n in range(1, 6):
+            module_label = ControlLabel(f'Module {n}')
+            control_text_bytes_msg = ControlText()
+
+            btn_send_msg_module = ControlButton(f'Send bytes')
+            btn_send_msg_module.value = make_lambda_func(self.__send_msg_btn_evt, btn=btn_send_msg_module, control_text=control_text_bytes_msg)
+
+            setattr(self, f'_module_label{n}', module_label)
+            setattr(self, f'_control_text_bytes_msg{n}', control_text_bytes_msg)
+            setattr(self, f'_btn_send_msg_module{n}', btn_send_msg_module)
+            self._send_msg_buttons.append(btn_send_msg_module)
+            self._control_text_bytes_msg.append(control_text_bytes_msg)
+
         self.formset = [
-            ([('h5:Current setup:',
-             '_currentSetup'),
-              ('h5:Selected board:',
-             '_selectedBoard'),
-              ('h5:Selected protocol:',
-             '_selectedProtocol')],
+            ([('h5:Current setup:', '_currentSetup'),
+              ('h5:Selected board:', '_selectedBoard'),
+              ('h5:Selected protocol:', '_selectedProtocol')],
              '',
              ['_run_task_btn', '_stop_trial_btn', '_pause_btn']),
             '',
@@ -96,10 +109,23 @@ class EmulatorGUI(BaseWidget):
              '_bnc_out_label',
              tuple([f'_btn_BNC_out{n.label}' for n in self._bnc_out_buttons])
              ),
-            ' '
+            '',
+            'h5: Send bytes to modules',
+            [(f'_module_label{idx+1}', f'_control_text_bytes_msg{idx+1}', f'_btn_send_msg_module{idx+1}') for idx, n in enumerate(self._send_msg_buttons)]
         ]
 
         self.set_margin(10)
+
+    def __send_msg_btn_evt(self, btn=None, control_text=None):
+        # get message from textbox
+        if btn is None or control_text is None:
+            return
+        module_index = btn.name[-1]
+        message = f"message:{module_index}:{control_text.value}"
+
+        # send msg through stdin to bpod (we need to create a command first in the other side)
+        self.setup.board.proc.stdin.write(message.encode('utf-8'))
+        self.setup.board.proc.stdin.flush()
 
     def __button_on_click_evt(self, btn=None):
         if btn is None:
@@ -132,7 +158,6 @@ class EmulatorGUI(BaseWidget):
             message = f'trigger_output:{port_name}{port_number}:{val}'
         else:
             message = f'trigger_input:{port_name}{port_number}:{val}'
-            
 
         self.setup.board.proc.stdin.write(message.encode('utf-8'))
         self.setup.board.proc.stdin.flush()
@@ -141,7 +166,6 @@ class EmulatorGUI(BaseWidget):
         try:
             if self.setup.status == self.setup.STATUS_RUNNING_TASK:
                 self.setup.stop_task()
-                # TODO: clear all buttons?
             elif self.setup.status == self.setup.STATUS_READY:
                 self.setup.run_task()
         except RunSetupError as err:
