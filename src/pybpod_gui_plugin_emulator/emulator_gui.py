@@ -1,8 +1,5 @@
-import io
-
 import pyforms
-from pybpodapi.com.arcom import ArduinoTypes
-from pybpodapi.com.protocol.send_msg_headers import SendMessageHeader
+from pybpodapi.bpod import Bpod
 from pybpodgui_api.exceptions.run_setup import RunSetupError
 from pybpodgui_plugin.utils import make_lambda_func
 from pyforms.basewidget import BaseWidget
@@ -31,11 +28,15 @@ class EmulatorGUI(BaseWidget):
                                            default=self.__run_protocol_btn_evt,
                                            checkable=True)
         self._stop_trial_btn = ControlButton('Stop trial',
-                                           default=self.__stop_trial_btn_evt,
-                                           enabled=False)
+                                             default=self.__stop_trial_btn_evt,
+                                             enabled=False)
         self._pause_btn = ControlButton('Pause',
-                                           default=self.__pause_btn_evt,
-                                           enabled=False)
+                                        default=self.__pause_btn_evt,
+                                        enabled=False)
+
+        bpod = Bpod(self.setup.board.serial_port)
+
+        # TODO: depending on the hardware of the board, generate the UI with more or less buttons
 
         self._valve_buttons = []
         self._valve_label = ControlLabel("Valve")
@@ -77,20 +78,24 @@ class EmulatorGUI(BaseWidget):
             self._bnc_in_buttons.append(btn_bnc_in)
             self._bnc_out_buttons.append(btn_bnc_out)
 
-        self._send_msg_buttons = []
-        self._control_text_bytes_msg = []
-        for n in range(1, 6):
+        self._modules_indexes_loaded = []
+
+        for idx, mod in enumerate(bpod.modules):
+            n = mod.serial_port
+            self._modules_indexes_loaded.append(n)
             module_label = ControlLabel(f'Module {n}')
             control_text_bytes_msg = ControlText()
 
             btn_send_msg_module = ControlButton(f'Send bytes')
-            btn_send_msg_module.value = make_lambda_func(self.__send_msg_btn_evt, btn=btn_send_msg_module, control_text=control_text_bytes_msg)
+            btn_send_msg_module.value = make_lambda_func(self.__send_msg_btn_evt,
+                                                         btn=btn_send_msg_module,
+                                                         control_text=control_text_bytes_msg)
 
             setattr(self, f'_module_label{n}', module_label)
             setattr(self, f'_control_text_bytes_msg{n}', control_text_bytes_msg)
             setattr(self, f'_btn_send_msg_module{n}', btn_send_msg_module)
-            self._send_msg_buttons.append(btn_send_msg_module)
-            self._control_text_bytes_msg.append(control_text_bytes_msg)
+
+        bpod.close()
 
         self.formset = [
             ([('h5:Current setup:', '_currentSetup'),
@@ -111,7 +116,7 @@ class EmulatorGUI(BaseWidget):
              ),
             '',
             'h5: Send bytes to modules',
-            [(f'_module_label{idx+1}', f'_control_text_bytes_msg{idx+1}', f'_btn_send_msg_module{idx+1}') for idx, n in enumerate(self._send_msg_buttons)]
+            [(f'_module_label{n}', f'_control_text_bytes_msg{n}', f'_btn_send_msg_module{n}') for n in self._modules_indexes_loaded]
         ]
 
         self.set_margin(10)
