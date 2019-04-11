@@ -34,8 +34,11 @@ class EmulatorGUI(BaseWidget):
                                         default=self.__pause_btn_evt,
                                         enabled=False)
 
-        # TODO: on first connection this might crash, we should capture the exception and try again
-        bpod = Bpod(self.setup.board.serial_port)
+        # FIXME: on first connection this might crash with the utf-8 error, we should capture the exception and try again
+        try:
+            bpod = Bpod(self.setup.board.serial_port)
+        except:
+            bpod = Bpod(self.setup.board.serial_port)
 
         number_ports = bpod.hardware.inputs.count('P')
         number_bnc = bpod.hardware.outputs.count('B')
