@@ -83,7 +83,7 @@ class EmulatorGUI(BaseWidget):
         for idx, mod in enumerate(bpod.modules):
             n = mod.serial_port
             self._modules_indexes_loaded.append(n)
-            module_label = ControlLabel(f'Module {n}')
+            module_label = ControlLabel(f'{mod.name}')
             control_text_bytes_msg = ControlText()
 
             btn_send_msg_module = ControlButton(f'Send bytes')
