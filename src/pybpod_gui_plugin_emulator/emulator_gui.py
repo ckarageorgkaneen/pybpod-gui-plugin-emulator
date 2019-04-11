@@ -34,9 +34,13 @@ class EmulatorGUI(BaseWidget):
                                         default=self.__pause_btn_evt,
                                         enabled=False)
 
+        # TODO: on first connection this might crash, we should capture the exception and try again
         bpod = Bpod(self.setup.board.serial_port)
 
-        # TODO: depending on the hardware of the board, generate the UI with more or less buttons
+        number_ports = bpod.hardware.inputs.count('P')
+        number_bnc = bpod.hardware.outputs.count('B')
+        number_wire_in = bpod.hardware.inputs.count('W')
+        number_wire_out = bpod.hardware.outputs.count('W')
 
         self._valve_buttons = []
         self._valve_label = ControlLabel("Valve")
@@ -45,7 +49,7 @@ class EmulatorGUI(BaseWidget):
         self._poke_buttons = []
         self._poke_label = ControlLabel("Poke")
 
-        for n in range(1, 5):
+        for n in range(1, number_ports + 1):
             btn_valve = ControlButton(str(n), icon=self.UNCHECKED_ICON, checkable=True)
             btn_led = ControlButton(str(n), icon=self.UNCHECKED_ICON, checkable=True)
             btn_poke = ControlButton(str(n), icon=self.UNCHECKED_ICON, checkable=True)
@@ -66,7 +70,7 @@ class EmulatorGUI(BaseWidget):
         self._bnc_out_buttons = []
         self._bnc_out_label = ControlLabel("BNC Out")
 
-        for n in range(1, 3):
+        for n in range(1, number_bnc + 1):
             btn_bnc_in = ControlButton(str(n), icon=self.UNCHECKED_ICON, checkable=True)
             btn_bnc_out = ControlButton(str(n), icon=self.UNCHECKED_ICON, checkable=True)
 
@@ -77,6 +81,25 @@ class EmulatorGUI(BaseWidget):
             setattr(self, f'_btn_BNC_out{n}', btn_bnc_out)
             self._bnc_in_buttons.append(btn_bnc_in)
             self._bnc_out_buttons.append(btn_bnc_out)
+
+        self._wire_in_buttons = []
+        self._wire_in_label = ControlLabel("Wire In")
+        self._wire_out_buttons = []
+        self._wire_out_label = ControlLabel("Wire Out")
+
+        for n in range(1, number_wire_in + 1):
+            btn_wire_in = ControlButton(str(n), icon=self.UNCHECKED_ICON, checkable=True)
+            btn_wire_in.value = make_lambda_func(self.__button_on_click_evt, btn=btn_wire_in)
+
+            setattr(self, f'_btn_Wire_in{n}', btn_wire_in)
+            self._wire_in_buttons.append(btn_wire_in)
+
+        for n in range(1, number_wire_out + 1):
+            btn_wire_out = ControlButton(str(n), icon=self.UNCHECKED_ICON, checkable=True)
+            btn_wire_out.value = make_lambda_func(self.__button_on_click_evt, btn=btn_wire_out)
+
+            setattr(self, f'_btn_Wire_out{n}', btn_wire_out)
+            self._wire_out_buttons.append(btn_wire_out)
 
         self._modules_indexes_loaded = []
 
@@ -114,8 +137,14 @@ class EmulatorGUI(BaseWidget):
              '_bnc_out_label',
              tuple([f'_btn_BNC_out{n.label}' for n in self._bnc_out_buttons])
              ),
+            'h5:Wire' if number_wire_in != 0 else '',
+            ('_wire_in_label' if number_wire_in != 0 else '',
+             tuple([f'_btn_Wire_in{n.label}' for n in self._wire_in_buttons]),
+             '_wire_out_label' if number_wire_out != 0 else '',
+             tuple([f'_btn_Wire_out{n.label}' for n in self._wire_out_buttons])
+             ),
             '',
-            'h5: Send bytes to modules',
+            'h5: Send bytes to modules' if self._modules_indexes_loaded else '',
             [(f'_module_label{n}', f'_control_text_bytes_msg{n}', f'_btn_send_msg_module{n}') for n in self._modules_indexes_loaded]
         ]
 
