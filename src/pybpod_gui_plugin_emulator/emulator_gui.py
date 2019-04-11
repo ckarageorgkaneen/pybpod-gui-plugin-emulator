@@ -124,30 +124,31 @@ class EmulatorGUI(BaseWidget):
         bpod.close()
 
         self.formset = [
-            ([('h5:Current setup:', '_currentSetup'),
-              ('h5:Selected board:', '_selectedBoard'),
-              ('h5:Selected protocol:', '_selectedProtocol')],
+            ([('Current setup:', '_currentSetup'),
+              ('Selected board:', '_selectedBoard'),
+              ('Selected protocol:', '_selectedProtocol')],
              '',
              ['_run_task_btn', '_stop_trial_btn', '_pause_btn']),
             '',
-            'h5:Behaviour Ports',
+            'Behaviour Ports',
             ('_valve_label', tuple([f'_btn_Valve{n.label}' for n in self._valve_buttons])),
             ('_led_label', tuple([f'_btn_PWM{n.label}' for n in self._led_buttons])),
             ('_poke_label', tuple([f'_btn_Port{n.label}' for n in self._poke_buttons])),
-            'h5:BNC',
+            '',
+            'BNC',
             ('_bnc_in_label',
              tuple([f'_btn_BNC_in{n.label}' for n in self._bnc_in_buttons]),
              '_bnc_out_label',
              tuple([f'_btn_BNC_out{n.label}' for n in self._bnc_out_buttons])
              ),
-            'h5:Wire' if number_wire_in != 0 else '',
+            'Wire' if number_wire_in != 0 else '',
             ('_wire_in_label' if number_wire_in != 0 else '',
              tuple([f'_btn_Wire_in{n.label}' for n in self._wire_in_buttons]),
              '_wire_out_label' if number_wire_out != 0 else '',
              tuple([f'_btn_Wire_out{n.label}' for n in self._wire_out_buttons])
              ),
             '',
-            'h5: Send bytes to modules' if self._modules_indexes_loaded else '',
+            'Send bytes to modules' if self._modules_indexes_loaded else '',
             [(f'_module_label{n}', f'_control_text_bytes_msg{n}', f'_btn_send_msg_module{n}') for n in self._modules_indexes_loaded]
         ]
 
