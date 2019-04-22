@@ -14,10 +14,7 @@ extensions = [
     'sphinx.ext.napoleon',
     'sphinx.ext.todo',
     'sphinx.ext.viewcode',
-    'sphinx.ext.inheritance_diagram'
 ]
-
-graphviz_output_format = 'svg'
 
 if os.getenv('SPELLCHECK'):
     extensions += 'sphinxcontrib.spelling',
@@ -50,8 +47,7 @@ html_split_index = False
 html_sidebars = {
    '**': ['searchbox.html', 
           'globaltoc.html', 
-          'sourcelink.html', 
-          'relations.html',  # needs 'show_related': True theme option to display 
+          'sourcelink.html',
          ],
 }
 html_short_title = '%s-%s' % (project, version)
