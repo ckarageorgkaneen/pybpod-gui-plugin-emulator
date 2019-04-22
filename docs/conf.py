@@ -14,7 +14,11 @@ extensions = [
     'sphinx.ext.napoleon',
     'sphinx.ext.todo',
     'sphinx.ext.viewcode',
+    'sphinx.ext.inheritance_diagram'
 ]
+
+graphviz_output_format = 'svg'
+
 if os.getenv('SPELLCHECK'):
     extensions += 'sphinxcontrib.spelling',
     spelling_show_suggestions = True
@@ -28,7 +32,7 @@ author = 'Luís Teixeira'
 copyright = '{0}, {1}'.format(year, author)
 version = release = '0.0.0'
 
-pygments_style = 'trac'
+pygments_style = 'default'
 templates_path = ['.']
 extlinks = {
     'issue': ('https://bitbucket.org/fchampalimaud/pybpod-gui-plugin-emulator/issues/%s', '#'),
@@ -44,7 +48,11 @@ html_use_smartypants = True
 html_last_updated_fmt = '%b %d, %Y'
 html_split_index = False
 html_sidebars = {
-   '**': ['searchbox.html', 'globaltoc.html', 'sourcelink.html'],
+   '**': ['searchbox.html', 
+          'globaltoc.html', 
+          'sourcelink.html', 
+          'relations.html',  # needs 'show_related': True theme option to display 
+         ],
 }
 html_short_title = '%s-%s' % (project, version)
 
