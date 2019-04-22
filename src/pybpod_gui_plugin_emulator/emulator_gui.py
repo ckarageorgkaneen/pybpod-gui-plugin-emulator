@@ -10,8 +10,17 @@ from pyforms_gui.controls.control_text import ControlText
 
 
 class EmulatorGUI(BaseWidget):
-
+    """
+    Main GUI for the Emulator module. This GUI window adapts automatically to the different Bpod versions that are
+    connected to the computer to present correctly the number of Ports available as well as the connected modules to the
+    Bpod modules ports.
+    """
+    
     def __init__(self, parent_win=None):
+        """
+        Constructor. Connects to a Bpod automatically to check the available ports and connected modules.
+        :param parent_win:
+        """
         self.setup = parent_win
         title = 'Emulator for setup: ' + self.setup.name
 
@@ -35,6 +44,7 @@ class EmulatorGUI(BaseWidget):
                                         enabled=False)
 
         # FIXME: on first connection this might crash with the utf-8 error, we should capture the exception and try again
+        # FIXME: if no Bpod is connected, we have a complete crash. We need to create some default values or presenting a message
         try:
             bpod = Bpod(self.setup.board.serial_port)
         except:
