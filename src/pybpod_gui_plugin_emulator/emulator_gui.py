@@ -7,6 +7,7 @@ from pyforms_gui.controls.control_button import ControlButton
 from confapp import conf
 from pyforms_gui.controls.control_label import ControlLabel
 from pyforms_gui.controls.control_text import ControlText
+from serial import SerialException
 
 
 class EmulatorGUI(BaseWidget):
@@ -19,9 +20,12 @@ class EmulatorGUI(BaseWidget):
     def __init__(self, parent_win=None):
         """
         Constructor. Connects to a Bpod automatically to check the available ports and connected modules.
+
         :param parent_win:
         """
         self.setup = parent_win
+        self.started_correctly = False
+
         title = 'Emulator for setup: ' + self.setup.name
 
         BaseWidget.__init__(self, title, parent_win=parent_win)
@@ -43,11 +47,13 @@ class EmulatorGUI(BaseWidget):
                                         default=self.__pause_btn_evt,
                                         enabled=False)
 
-        # FIXME: on first connection this might crash with the utf-8 error, we should capture the exception and try again
-        # FIXME: if no Bpod is connected, we have a complete crash. We need to create some default values or presenting a message
         try:
             bpod = Bpod(self.setup.board.serial_port)
-        except:
+        except SerialException as e:
+            self.critical('No Bpod device connected, cannot continue until one is connected.', 'Bpod not connected')
+            return
+        except Exception as e:
+            # NOTE: try again in case of the first connection attempt where we always get the utf-8 exception
             bpod = Bpod(self.setup.board.serial_port)
 
         number_ports = bpod.hardware.inputs.count('P')
@@ -131,7 +137,8 @@ class EmulatorGUI(BaseWidget):
             setattr(self, f'_control_text_bytes_msg{n}', control_text_bytes_msg)
             setattr(self, f'_btn_send_msg_module{n}', btn_send_msg_module)
 
-        bpod.close()
+        if bpod:
+            bpod.close()
 
         self.formset = [
             ([('Current setup:', '_currentSetup'),
@@ -163,6 +170,7 @@ class EmulatorGUI(BaseWidget):
         ]
 
         self.set_margin(10)
+        self.started_correctly = True
 
     def __send_msg_btn_evt(self, btn=None, control_text=None):
         # get message from textbox

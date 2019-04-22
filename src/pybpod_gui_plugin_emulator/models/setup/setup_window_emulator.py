@@ -52,8 +52,16 @@ class SetupWindowEmulator(SetupDockWindow):
 
     def __emulator_btn_evt(self):
         if not hasattr(self, 'emulator_plugin'):
-            self.emulator_plugin = EmulatorGUI(self)
+            self.create_emulator_window()
+        else:
+            if self.emulator_plugin.started_correctly:
+                self.emulator_plugin.show()
+            else:
+                self.create_emulator_window()
+
+    def create_emulator_window(self):
+        self.emulator_plugin = EmulatorGUI(self)
+        if self.emulator_plugin.started_correctly:
             self.emulator_plugin.show()
             self.emulator_plugin.resize(*conf.EMULATOR_PLUGIN_WINDOW_SIZE)
-        else:
-            self.emulator_plugin.show()
+
