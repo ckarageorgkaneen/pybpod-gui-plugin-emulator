@@ -31,8 +31,8 @@ version = release = '0.0.0'
 pygments_style = 'trac'
 templates_path = ['.']
 extlinks = {
-    'issue': ('https://github.com/MicBoucinha/pybpod-gui-plugin-emulator/issues/%s', '#'),
-    'pr': ('https://github.com/MicBoucinha/pybpod-gui-plugin-emulator/pull/%s', 'PR #'),
+    'issue': ('https://bitbucket.org/fchampalimaud/pybpod-gui-plugin-emulator/issues/%s', '#'),
+    'pr': ('https://bitbucket.org/fchampalimaud/pybpod-gui-plugin-emulator/pull-requests/%s', 'PR #'),
 }
 # on_rtd is whether we are on readthedocs.org
 on_rtd = os.environ.get('READTHEDOCS', None) == 'True'
@@ -51,3 +51,5 @@ html_short_title = '%s-%s' % (project, version)
 napoleon_use_ivar = True
 napoleon_use_rtype = False
 napoleon_use_param = False
+
+autodoc_mock_imports = ["pandas", "matplotlib", "visvis"]

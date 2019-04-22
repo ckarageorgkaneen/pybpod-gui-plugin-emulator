@@ -9,27 +9,15 @@ Overview
 
     * - docs
       - |docs|
-    * - tests
-      - |
-        | |codecov|
     * - package
-      - | |version| |wheel| |supported-versions| |supported-implementations|
-        | |commits-since|
+      - | |version| |wheel| |supported-versions| |supported-implementations| |
 .. |docs| image:: https://readthedocs.org/projects/pybpod-gui-plugin-emulator/badge/?style=flat
     :target: https://readthedocs.org/projects/pybpod-gui-plugin-emulator
     :alt: Documentation Status
 
-.. |codecov| image:: https://codecov.io/github/MicBoucinha/pybpod-gui-plugin-emulator/coverage.svg?branch=master
-    :alt: Coverage Status
-    :target: https://codecov.io/github/MicBoucinha/pybpod-gui-plugin-emulator
-
 .. |version| image:: https://img.shields.io/pypi/v/pybpod-gui-plugin-emulator.svg
     :alt: PyPI Package latest release
     :target: https://pypi.org/project/pybpod-gui-plugin-emulator
-
-.. |commits-since| image:: https://img.shields.io/github/commits-since/MicBoucinha/pybpod-gui-plugin-emulator/v0.0.0.svg
-    :alt: Commits since latest release
-    :target: https://github.com/MicBoucinha/pybpod-gui-plugin-emulator/compare/v0.0.0...master
 
 .. |wheel| image:: https://img.shields.io/pypi/wheel/pybpod-gui-plugin-emulator.svg
     :alt: PyPI Wheel
