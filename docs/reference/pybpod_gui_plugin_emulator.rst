@@ -7,6 +7,8 @@ pybpod_gui_plugin_emulator
 .. autoclass:: pybpod_gui_plugin_emulator.EmulatorGUI
    :members:
    :undoc-members:
+   :private-members:
+   :special-members:
    :show-inheritance:
 
 .. automodule:: pybpod_gui_plugin_emulator.models.setup
