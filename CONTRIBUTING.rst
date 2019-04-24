@@ -41,7 +41,7 @@ To set up `pybpod-gui-plugin-emulator` for local development:
    (look for the "Fork" button).
 2. Clone your fork locally::
 
-    git clone git@github.com:your_name_here/pybpod-gui-plugin-emulator.git
+    git clone https://your_name_here@bitbucket.com:fchampalimaud/pybpod-gui-plugin-emulator/pybpod-gui-plugin-emulator.git
 
 3. Create a branch for local development::
 
