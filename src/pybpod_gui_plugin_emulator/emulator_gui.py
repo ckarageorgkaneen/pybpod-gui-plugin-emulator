@@ -15,14 +15,11 @@ class EmulatorGUI(BaseWidget):
     Main GUI for the Emulator module. This GUI window adapts automatically to the different Bpod versions that are
     connected to the computer to present correctly the number of Ports available as well as the connected modules to the
     Bpod modules ports.
-    """
-    
-    def __init__(self, parent_win=None):
-        """
-        Constructor. Connects to a Bpod automatically to check the available ports and connected modules.
 
-        :param parent_win:
-        """
+    :param parent_win: The Setup object reference that this Emulator will be associated.
+    """
+
+    def __init__(self, parent_win=None):
         self.setup = parent_win
         self.started_correctly = False
 
@@ -49,10 +46,10 @@ class EmulatorGUI(BaseWidget):
 
         try:
             bpod = Bpod(self.setup.board.serial_port)
-        except SerialException as e:
+        except SerialException:
             self.critical('No Bpod device connected, cannot continue until one is connected.', 'Bpod not connected')
             return
-        except Exception as e:
+        except Exception:
             # NOTE: try again in case of the first connection attempt where we always get the utf-8 exception
             bpod = Bpod(self.setup.board.serial_port)
 
@@ -173,6 +170,11 @@ class EmulatorGUI(BaseWidget):
         self.started_correctly = True
 
     def show(self):
+        """
+        Overrides the BaseWidget implementation of the show method in order to update the textual information of the
+        board and protocol used, in case of being updated in the main window after creation of this EmulatorGUI window.
+        :return:
+        """
         # update names on labels
         self._currentSetup.value = self.setup.name
         self._selectedBoard.value = self.setup.board.name
@@ -182,9 +184,19 @@ class EmulatorGUI(BaseWidget):
         super(BaseWidget, self).show()
 
     def update_task(self, task):
+        """
+        Method to update the task name
+        :param task: The Task to be used to update the information in the UI, if available.
+        :return:
+        """
         self._selectedProtocol.value = task.name if task is not 0 else ''
 
     def update_board(self, board):
+        """
+        Method to update the board name
+        :param board: The Board to be used to update the information in the UI, if available.
+        :return:
+        """
         self._selectedBoard.value = board.name if board is not 0 else ''
 
     def __send_msg_btn_evt(self, btn=None, control_text=None):
