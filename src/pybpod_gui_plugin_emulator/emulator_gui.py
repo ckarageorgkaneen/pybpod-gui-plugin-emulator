@@ -172,6 +172,21 @@ class EmulatorGUI(BaseWidget):
         self.set_margin(10)
         self.started_correctly = True
 
+    def show(self):
+        # update names on labels
+        self._currentSetup.value = self.setup.name
+        self._selectedBoard.value = self.setup.board.name
+        self._selectedProtocol.value = self.setup.task.name
+
+        self.init_form()
+        super(BaseWidget, self).show()
+
+    def update_task(self, task):
+        self._selectedProtocol.value = task.name if task is not 0 else ''
+
+    def update_board(self, board):
+        self._selectedBoard.value = board.name if board is not 0 else ''
+
     def __send_msg_btn_evt(self, btn=None, control_text=None):
         # get message from textbox
         if btn is None or control_text is None:
