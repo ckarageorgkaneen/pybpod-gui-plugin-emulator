@@ -3,7 +3,7 @@ Usage
 =====
 
 After installing the plugin (please see :ref:`installation`),
-a new *Test with Emulator* button will appear in each of the
+a new *Test protocol IO* button will appear in each of the
 already configured Setups.
 
 .. warning::
