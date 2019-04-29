@@ -5,11 +5,16 @@ from confapp import conf
 
 
 class SetupWindowEmulator(SetupDockWindow):
+    """
+    Setup
+
+    :param experiment: The parent Experiment of this Setup
+    """
 
     def __init__(self, experiment=None):
         super(SetupWindowEmulator, self).__init__(experiment)
 
-        self._emulator = ControlButton('Test with emulator',
+        self._emulator = ControlButton('Test protocol IO',
                                        default=self.__emulator_btn_evt,
                                        icon=conf.EMULATOR_LAUNCH_ICON,
                                        enabled=False)
