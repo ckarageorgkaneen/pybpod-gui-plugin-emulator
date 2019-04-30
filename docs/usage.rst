@@ -312,6 +312,11 @@ Output channel names
 Event names
 ===========
 
+.. note::
+    In the following table, to reduce the size of the table, a convention was defined to aggregate several names of the
+    events. For example, where it can be read Serial1_[1-15], it means that we can have Serial1_1, Serial1_2, until
+    Serial1_15.
+
 .. list-table::
     :widths: 15 11 11
     :header-rows: 1
@@ -320,22 +325,22 @@ Event names
     * - Event names
       - Bpod v0.7
       - Bpod v2
-    * - Serial1_1 ... Serial1_15
+    * - Serial1_[1-15]
       - |check|
       - |check|
-    * - Serial2_1 ... Serial2_15
+    * - Serial2_[1-15]
       - |check|
       - |check|
-    * - Serial3_1 ... Serial3_15
+    * - Serial3_[1-15]
       - |check|
       - |check|
-    * - Serial4_1 ... Serial4_15
+    * - Serial4_[1-15]
       - |cross|
       - |check|
-    * - Serial5_1 ... Serial5_15
+    * - Serial5_[1-15]
       - |cross|
       - |check|
-    * - SoftCode1 ... SoftCode15
+    * - SoftCode[1-15]
       - |check|
       - |check|
     * - BNC1High
