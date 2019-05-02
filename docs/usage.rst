@@ -1,3 +1,5 @@
+.. _usage:
+
 =====
 Usage
 =====
@@ -92,6 +94,13 @@ during the 3 seconds duration of the state 'Port3LightOn'. When pressing the Pok
 
 As it can be seen from this example, the protocol written can be used either with the plugin or directly, with no
 changes necessary to test the input and output ports and if the events are being triggered as expected.
+
+The available input and output channel names, as well as the event names, for both the Bpod v0.7 and Bpod v2 are
+presented in the next sections.
+
+.. note::
+    For either case of the Bpod's hardware version, it is assumed that firmware version **22** is installed.
+
 
 ..    include:: <isopub.txt>
 Input channel names
