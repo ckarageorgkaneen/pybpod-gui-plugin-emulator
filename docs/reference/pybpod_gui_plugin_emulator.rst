@@ -1,9 +1,8 @@
 pybpod_gui_plugin_emulator
 ==========================
 
-.. testsetup::
+.. autoclass:: pybpod_gui_plugin_emulator.EmulatorGUI
+   :members:
+   :undoc-members:
+   :show-inheritance:
 
-    from pybpod_gui_plugin_emulator import *
-
-.. automodule:: pybpod_gui_plugin_emulator
-    :members:

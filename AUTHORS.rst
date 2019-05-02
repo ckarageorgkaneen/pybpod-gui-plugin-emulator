@@ -2,4 +2,4 @@
 Authors
 =======
 
-* Luís Teixeira - https://blog.ionelmc.ro
+* Luís Teixeira

@@ -1,5 +1,5 @@
 
-from pybpod_gui_plugin_emulator import module
+from pybpod_gui_plugin_emulator import emulator_gui
 
 
 def test_main():

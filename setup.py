@@ -35,9 +35,10 @@ setup(
     ),
     author='Luís Teixeira',
     author_email='micboucinha@gmail.com',
-    url='https://github.com/MicBoucinha/pybpod-gui-plugin-emulator',
+    url='https://bitbucket.org/fchampalimaud/pybpod-gui-plugin-emulator/',
     packages=find_packages('src'),
     package_dir={'': 'src'},
+    package_data={'pybpod_gui_plugin_emulator': ['src/resources/*.*',]},
     py_modules=[splitext(basename(path))[0] for path in glob('src/*.py')],
     include_package_data=True,
     zip_safe=False,
@@ -53,9 +54,9 @@ setup(
         # 'Programming Language :: Python :: 2.7',
         # 'Programming Language :: Python :: 3',
         # 'Programming Language :: Python :: 3.4',
-        'Programming Language :: Python :: 3.5',
+        # 'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
-        'Programming Language :: Python :: 3.7',
+        # 'Programming Language :: Python :: 3.7',
         # 'Programming Language :: Python :: Implementation :: CPython',
         # 'Programming Language :: Python :: Implementation :: PyPy',
         # uncomment if you test on these interpreters:
@@ -67,14 +68,14 @@ setup(
     project_urls={
         'Documentation': 'https://pybpod-gui-plugin-emulator.readthedocs.io/',
         'Changelog': 'https://pybpod-gui-plugin-emulator.readthedocs.io/en/latest/changelog.html',
-        'Issue Tracker': 'https://github.com/MicBoucinha/pybpod-gui-plugin-emulator/issues',
+        'Issue Tracker': 'https://bitbucket.org/fchampalimaud/pybpod-gui-plugin-emulator/issues',
     },
     keywords=[
         # eg: 'keyword1', 'keyword2', 'keyword3',
     ],
     python_requires='>=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*',
     install_requires=[
-        # eg: 'aspectlib==1.1.1', 'six>=1.7',
+        'pybpod-api'
     ],
     extras_require={
         # eg:
