@@ -48,14 +48,14 @@ class SetupWindowEmulator(SetupDockWindow):
     def _task_changed_evt(self):
         if hasattr(self, '_emulator'):
             self._emulator.enabled = (self._task.value is not 0 and self._board.value is not 0)
-        if hasattr(self, 'emulator_plugin'):
+        if hasattr(self, 'emulator_plugin') and self._task.value:
             self.emulator_plugin.update_task(self._task.value)
         super()._task_changed_evt()
 
     def _board_changed_evt(self):
         if hasattr(self, '_emulator'):
             self._emulator.enabled = (self._board.value is not 0 and self._task.value is not 0)
-        if hasattr(self, 'emulator_plugin'):
+        if hasattr(self, 'emulator_plugin') and self._board.value:
             self.emulator_plugin.update_board(self._board.value)
         super()._board_changed_evt()
 
