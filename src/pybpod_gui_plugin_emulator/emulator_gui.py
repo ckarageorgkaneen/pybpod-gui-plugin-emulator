@@ -1,4 +1,5 @@
 import pyforms
+import os
 from pybpodapi.bpod import Bpod
 from pybpodgui_api.exceptions.run_setup import RunSetupError
 from pybpodgui_plugin.utils import make_lambda_func
@@ -204,7 +205,7 @@ class EmulatorGUI(BaseWidget):
         if btn is None or control_text is None:
             return
         module_index = btn.name[-1]
-        message = f"message:{module_index}:{control_text.value}\n"
+        message = f'message:{module_index}:{control_text.value}{os.linesep}'
 
         # send msg through stdin to bpod (we need to create a command first in the other side)
         self.setup.board.proc.stdin.write(message.encode('utf-8'))
@@ -238,9 +239,9 @@ class EmulatorGUI(BaseWidget):
             btn.icon = self.UNCHECKED_ICON
 
         if is_output:
-            message = f'trigger_output:{port_name}{port_number}:{val}\n'
+            message = f'trigger_output:{port_name}{port_number}:{val}{os.linesep}'
         else:
-            message = f'trigger_input:{port_name}{port_number}:{val}\n'
+            message = f'trigger_input:{port_name}{port_number}:{val}{os.linesep}'
 
         self.setup.board.proc.stdin.write(message.encode('utf-8'))
         self.setup.board.proc.stdin.flush()
