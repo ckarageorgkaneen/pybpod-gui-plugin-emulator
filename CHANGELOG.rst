@@ -2,6 +2,19 @@
 Changelog
 =========
 
+0.1.3 (2019-05-14)
+------------------
+* Fixed override messages not being sent properly on Windows
+* Fix for pause not working
+
+0.1.2 (2019-05-13)
+------------------
+* Fix for README to comply with PyPI support for reStructuredText
+
+0.1.1 (2019-05-13)
+------------------
+* Fix for disappearing board on Setup window
+
 0.1.0 (2019-05-03)
 ------------------
 
