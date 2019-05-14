@@ -1,4 +1,5 @@
 import pyforms
+import os
 from pybpodapi.bpod import Bpod
 from pybpodgui_api.exceptions.run_setup import RunSetupError
 from pybpodgui_plugin.utils import make_lambda_func
@@ -41,8 +42,9 @@ class EmulatorGUI(BaseWidget):
                                              default=self.__stop_trial_btn_evt,
                                              enabled=False)
         self._pause_btn = ControlButton('Pause',
-                                        default=self.__pause_btn_evt,
-                                        enabled=False)
+                                                 default=self.__pause_btn_evt,
+                                                 checkable=True,
+                                                 enabled=False)
 
         try:
             bpod = Bpod(self.setup.board.serial_port)
@@ -204,7 +206,7 @@ class EmulatorGUI(BaseWidget):
         if btn is None or control_text is None:
             return
         module_index = btn.name[-1]
-        message = f"message:{module_index}:{control_text.value}"
+        message = f'message:{module_index}:{control_text.value}{os.linesep}'
 
         # send msg through stdin to bpod (we need to create a command first in the other side)
         self.setup.board.proc.stdin.write(message.encode('utf-8'))
@@ -238,9 +240,9 @@ class EmulatorGUI(BaseWidget):
             btn.icon = self.UNCHECKED_ICON
 
         if is_output:
-            message = f'trigger_output:{port_name}{port_number}:{val}'
+            message = f'trigger_output:{port_name}{port_number}:{val}{os.linesep}'
         else:
-            message = f'trigger_input:{port_name}{port_number}:{val}'
+            message = f'trigger_input:{port_name}{port_number}:{val}{os.linesep}'
 
         self.setup.board.proc.stdin.write(message.encode('utf-8'))
         self.setup.board.proc.stdin.flush()
@@ -266,8 +268,12 @@ class EmulatorGUI(BaseWidget):
 
     def __pause_btn_evt(self):
         setup = self.setup
-        if setup:
-            setup._pause_evt()
+        if self._pause_btn.checked:
+            self._pause_btn.label = 'Resume'
+            setup.pause_trial()
+        else:
+            setup.resume_trial()
+            self._pause_btn.label = 'Pause'
 
 
 if __name__ == '__main__':
