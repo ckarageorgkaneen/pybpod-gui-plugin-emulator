@@ -204,7 +204,7 @@ class EmulatorGUI(BaseWidget):
         if btn is None or control_text is None:
             return
         module_index = btn.name[-1]
-        message = f"message:{module_index}:{control_text.value}"
+        message = f"message:{module_index}:{control_text.value}\n"
 
         # send msg through stdin to bpod (we need to create a command first in the other side)
         self.setup.board.proc.stdin.write(message.encode('utf-8'))
@@ -238,9 +238,9 @@ class EmulatorGUI(BaseWidget):
             btn.icon = self.UNCHECKED_ICON
 
         if is_output:
-            message = f'trigger_output:{port_name}{port_number}:{val}'
+            message = f'trigger_output:{port_name}{port_number}:{val}\n'
         else:
-            message = f'trigger_input:{port_name}{port_number}:{val}'
+            message = f'trigger_input:{port_name}{port_number}:{val}\n'
 
         self.setup.board.proc.stdin.write(message.encode('utf-8'))
         self.setup.board.proc.stdin.flush()
