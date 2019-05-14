@@ -42,8 +42,9 @@ class EmulatorGUI(BaseWidget):
                                              default=self.__stop_trial_btn_evt,
                                              enabled=False)
         self._pause_btn = ControlButton('Pause',
-                                        default=self.__pause_btn_evt,
-                                        enabled=False)
+                                                 default=self.__pause_btn_evt,
+                                                 checkable=True,
+                                                 enabled=False)
 
         try:
             bpod = Bpod(self.setup.board.serial_port)
@@ -267,8 +268,12 @@ class EmulatorGUI(BaseWidget):
 
     def __pause_btn_evt(self):
         setup = self.setup
-        if setup:
-            setup._pause_evt()
+        if self._pause_btn.checked:
+            self._pause_btn.label = 'Resume'
+            setup.pause_trial()
+        else:
+            setup.resume_trial()
+            self._pause_btn.label = 'Pause'
 
 
 if __name__ == '__main__':
