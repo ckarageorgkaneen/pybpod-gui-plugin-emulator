@@ -57,7 +57,7 @@ Current Features
 Installation
 ============
 
-Please see :ref:`installation` page.
+Please see Installation page.
 
 Documentation
 =============
