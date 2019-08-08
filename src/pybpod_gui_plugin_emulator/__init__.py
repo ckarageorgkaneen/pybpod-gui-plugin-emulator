@@ -1,4 +1,4 @@
-__version__ = '0.1.2'
+__version__ = '0.1.3'
 
 from pybpod_gui_plugin_emulator.emulator_gui import EmulatorGUI
 
