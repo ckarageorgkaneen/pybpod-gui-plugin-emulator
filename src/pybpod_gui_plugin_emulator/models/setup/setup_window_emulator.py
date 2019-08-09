@@ -23,8 +23,8 @@ class SetupWindowEmulator(SetupDockWindow):
             '_name',
             '_board',
             '_task',
-            ('_detached', '_run_task_btn'),
             '_emulator',
+            ('_detached', '_run_task_btn'),
             ('_stoptrial_btn', '_pause_btn'),
             '=',
             {
