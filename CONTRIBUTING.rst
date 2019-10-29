@@ -8,7 +8,7 @@ little bit helps, and credit will always be given.
 Bug reports
 ===========
 
-When `reporting a bug <https://bitbucket.org/fchampalimaud/pybpod-gui-plugin-emulator/issues>`_ please include:
+When `reporting a bug <https://github.com/pybpod/pybpod-gui-plugin-emulator/issues>`_ please include:
 
     * Your operating system name and version.
     * Any details about your local setup that might be helpful in troubleshooting.
@@ -24,7 +24,7 @@ articles, and such.
 Feature requests and feedback
 =============================
 
-The best way to send feedback is to file an issue at https://bitbucket.org/fchampalimaud/pybpod-gui-plugin-emulator/issues.
+The best way to send feedback is to file an issue at https://github.com/pybpod/pybpod-gui-plugin-emulator/issues.
 
 If you are proposing a feature:
 
@@ -37,11 +37,11 @@ Development
 
 To set up `pybpod-gui-plugin-emulator` for local development:
 
-1. Fork `pybpod-gui-plugin-emulator <https://bitbucket.org/fchampalimaud/pybpod-gui-plugin-emulator>`_
+1. Fork `pybpod-gui-plugin-emulator <https://github.com/pybpod/pybpod-gui-plugin-emulator>`_
    (look for the "Fork" button).
 2. Clone your fork locally::
 
-    git clone https://your_name_here@bitbucket.com:fchampalimaud/pybpod-gui-plugin-emulator/pybpod-gui-plugin-emulator.git
+    git clone https://github.com/pybpod/pybpod-gui-plugin-emulator.git
 
 3. Create a branch for local development::
 
