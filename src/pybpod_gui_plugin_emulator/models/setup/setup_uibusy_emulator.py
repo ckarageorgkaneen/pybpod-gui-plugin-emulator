@@ -11,13 +11,17 @@ class SetupUIBusyEmulator(SetupWindowEmulator):
             if self.status == self.STATUS_READY:
                 self.emulator_plugin._run_task_btn.checked = False
                 self.emulator_plugin._run_task_btn.label = 'Run protocol'
+                self.emulator_plugin._kill_task_btn.enabled = False
                 self.emulator_plugin._stop_trial_btn.enabled = False
+                self.emulator_plugin._pause_btn.label = 'Pause'
                 self.emulator_plugin._pause_btn.enabled = False
+                self.emulator_plugin._pause_btn.checked = False
 
             elif self.status == self.STATUS_BOARD_LOCKED:
                 print("board locked")
             elif self.status == self.STATUS_RUNNING_TASK:
                 self.emulator_plugin._run_task_btn.checked = True
-                self.emulator_plugin._run_task_btn.label = 'Stop'
+                self.emulator_plugin._run_task_btn.label = 'Skip all trials'
+                self.emulator_plugin._kill_task_btn.enabled = True
                 self.emulator_plugin._stop_trial_btn.enabled = True
                 self.emulator_plugin._pause_btn.enabled = True

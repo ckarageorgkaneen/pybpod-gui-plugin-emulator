@@ -37,14 +37,22 @@ class EmulatorGUI(BaseWidget):
 
         self._run_task_btn = ControlButton('Run protocol',
                                            default=self.__run_protocol_btn_evt,
-                                           checkable=True)
+                                           checkable=True,
+                                           helptext="When a task is running, you can skip all remaining trials by pressing this button. <br/> <b>NOTE:</b> This means that you will need to break the cycle in your task code when the run_state_machine method returns False.")
+        self._kill_task_btn = ControlButton('Kill',
+                                            default=self.__kill_btn_evt,
+                                            style="background-color:rgb(255,0,0);font-weight:bold;",
+                                            helptext="<b>NOTE:</b>This will exit the task process abruptly. The code you might have after the trial loop won't execute.")
+
+        self._kill_task_btn.enabled = False
+
         self._stop_trial_btn = ControlButton('Stop trial',
                                              default=self.__stop_trial_btn_evt,
                                              enabled=False)
         self._pause_btn = ControlButton('Pause',
-                                                 default=self.__pause_btn_evt,
-                                                 checkable=True,
-                                                 enabled=False)
+                                        default=self.__pause_btn_evt,
+                                        checkable=True,
+                                        enabled=False)
 
         try:
             bpod = Bpod(self.setup.board.serial_port)
@@ -144,7 +152,7 @@ class EmulatorGUI(BaseWidget):
               ('Selected board:', '_selectedBoard'),
               ('Selected protocol:', '_selectedProtocol')],
              '',
-             ['_run_task_btn', '_stop_trial_btn', '_pause_btn']),
+             ['_run_task_btn', '_kill_task_btn', '_stop_trial_btn', '_pause_btn']),
             '',
             'Behaviour Ports',
             ('_valve_label', tuple([f'_btn_Valve{n.label}' for n in self._valve_buttons])),
@@ -258,6 +266,10 @@ class EmulatorGUI(BaseWidget):
         except Exception as err:
             self.alert(str(err), "Unexpected Error")
         pass
+
+    def __kill_btn_evt(self):
+        if self.setup.status == self.setup.STATUS_RUNNING_TASK:
+            self.setup.kill_task()
 
     def __stop_trial_btn_evt(self):
         setup = self.setup
