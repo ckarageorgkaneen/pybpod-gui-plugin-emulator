@@ -2,6 +2,11 @@
 Changelog
 =========
 
+0.1.4 (2019-11-07)
+------------------
+* Add task kill button to UI
+* Reordered the "Test Protocol IO" button in the UI
+
 0.1.3 (2019-05-14)
 ------------------
 * Fixed override messages not being sent properly on Windows
