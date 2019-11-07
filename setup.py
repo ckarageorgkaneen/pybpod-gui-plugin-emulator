@@ -26,8 +26,8 @@ def read(*names, **kwargs):
 
 setup(
     name='pybpod-gui-plugin-emulator',
-    version='0.1.3',
-    license='MIT license',
+    version='0.1.4',
+    license='MIT',
     description="Emulator for PyBpod to work with the Bpod's State Machine ports.",
     long_description='%s\n%s' % (
         re.compile('^.. start-badges.*^.. end-badges', re.M | re.S).sub('', read('README.rst')),
