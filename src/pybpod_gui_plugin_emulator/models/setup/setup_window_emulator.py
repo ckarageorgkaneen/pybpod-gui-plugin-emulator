@@ -61,13 +61,10 @@ class SetupWindowEmulator(SetupDockWindow):
         super()._board_changed_evt()
 
     def __emulator_btn_evt(self):
-        if not hasattr(self, 'emulator_plugin'):
-            self.create_emulator_window()
+        if hasattr(self, 'emulator_plugin') and self.emulator_plugin.started_correctly:
+            self.emulator_plugin.show()
         else:
-            if self.emulator_plugin.started_correctly:
-                self.emulator_plugin.show()
-            else:
-                self.create_emulator_window()
+            self.create_emulator_window()
 
     def create_emulator_window(self):
         self.emulator_plugin = EmulatorGUI(self)
