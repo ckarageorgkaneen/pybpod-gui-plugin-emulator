@@ -23,7 +23,7 @@ When pressing the button, with a Bpod device connected, the window presented in 
    PyBpod's Main window with the Emulator Window opened
 
 At the top of the window it is possible to see the selected Setup, the selected Board and protocol. The buttons that
-are also available in the Setup details of PyBpod are also available in the Emulator window (i.e., Run, Stop trial and
+are also available in the Setup details of PyBpod are also available in the Emulator window (i.e., Run, Skip trial and
 Pause).
 
 Afterwards, a section with the Behaviour Ports is presented with three rows of buttons, each button for each available

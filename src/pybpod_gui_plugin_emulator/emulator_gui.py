@@ -46,7 +46,7 @@ class EmulatorGUI(BaseWidget):
 
         self._kill_task_btn.enabled = False
 
-        self._stop_trial_btn = ControlButton('Stop trial',
+        self._stop_trial_btn = ControlButton('Skip trial',
                                              default=self.__stop_trial_btn_evt,
                                              enabled=False)
         self._pause_btn = ControlButton('Pause',
