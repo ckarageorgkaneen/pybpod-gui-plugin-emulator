@@ -265,7 +265,6 @@ class EmulatorGUI(BaseWidget):
             self.warning(str(err), "Warning")
         except Exception as err:
             self.alert(str(err), "Unexpected Error")
-        pass
 
     def __kill_btn_evt(self):
         if self.setup.status == self.setup.STATUS_RUNNING_TASK:
