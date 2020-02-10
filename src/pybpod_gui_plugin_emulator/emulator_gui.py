@@ -46,7 +46,7 @@ class EmulatorGUI(BaseWidget):
 
         self._kill_task_btn.enabled = False
 
-        self._stop_trial_btn = ControlButton('Stop trial',
+        self._stop_trial_btn = ControlButton('Skip trial',
                                              default=self.__stop_trial_btn_evt,
                                              enabled=False)
         self._pause_btn = ControlButton('Pause',
@@ -265,7 +265,6 @@ class EmulatorGUI(BaseWidget):
             self.warning(str(err), "Warning")
         except Exception as err:
             self.alert(str(err), "Unexpected Error")
-        pass
 
     def __kill_btn_evt(self):
         if self.setup.status == self.setup.STATUS_RUNNING_TASK:

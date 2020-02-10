@@ -2,6 +2,11 @@
 Changelog
 =========
 
+0.1.5 (2020-02-10)
+------------------
+* Renamed 'Skip all trials' button to 'Stop'
+* Renamed 'Stop trial' button to 'Skip trial'
+
 0.1.4 (2019-11-07)
 ------------------
 * Add task kill button to UI
