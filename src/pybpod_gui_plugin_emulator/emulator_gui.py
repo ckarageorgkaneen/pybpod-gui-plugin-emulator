@@ -9,6 +9,8 @@ from confapp import conf
 from pyforms_gui.controls.control_label import ControlLabel
 from pyforms_gui.controls.control_text import ControlText
 from serial import SerialException
+from AnyQt import QtCore
+from .emulator_mode_server import EmulatorModeServer
 
 
 class EmulatorGUI(BaseWidget):
@@ -55,7 +57,7 @@ class EmulatorGUI(BaseWidget):
                                         enabled=False)
 
         try:
-            bpod = Bpod(self.setup.board.serial_port)
+            bpod = Bpod(self.setup.board.serial_port, emulator_mode=self.setup.board.emulator_mode)
         except SerialException:
             self.critical('No Bpod device connected, cannot continue until one is connected.', 'Bpod not connected')
             return
@@ -179,6 +181,12 @@ class EmulatorGUI(BaseWidget):
         self.set_margin(10)
         self.started_correctly = True
 
+        if self.setup.board.emulator_mode:
+            self._server = EmulatorModeServer()
+            self._server.signal_data_received.connect(
+                self.__handleEmulatorModeServerData)
+            self.most_recently_set_button = None
+
     def show(self):
         """
         Overrides the BaseWidget implementation of the show method in order to update the textual information of the
@@ -191,6 +199,12 @@ class EmulatorGUI(BaseWidget):
         self._selectedProtocol.value = self.setup.task.name
 
         self.init_form()
+        if self.setup.board.emulator_mode:
+            try:
+                self._server.listen()
+            except RuntimeError as e:
+                self.warning(str(e))
+
         super(BaseWidget, self).show()
 
     def update_task(self, task):
@@ -208,6 +222,53 @@ class EmulatorGUI(BaseWidget):
         :return:
         """
         self._selectedBoard.value = board.name if board is not 0 else ''
+
+    def closeEvent(self, event):
+        if self.setup.board.emulator_mode:
+            self._server.close()
+        self.__reset_buttons()
+        super(EmulatorGUI, self).closeEvent(event)
+
+    def __handleEmulatorModeServerData(self, data):
+        output = data.split(':')
+        output_channel_name = output[0]
+        output_value = int(float(output[1]))
+        self.__set_output_button(output_channel_name, output_value)
+
+    def __set_output_button(self, channel_name, value):
+        output_button = getattr(self, f'_btn_{channel_name}', None)
+        if output_button is not None:
+            is_pwm = channel_name.startswith('PWM')
+            is_valve = channel_name.startswith('Valve')
+            is_output = is_pwm or is_valve
+            if is_output:
+                button_checked = (is_pwm and value > 0) or \
+                    (is_valve and value == 1)
+                output_button.checked = button_checked
+                if button_checked:
+                    output_button.icon = self.CHECKED_ICON
+                else:
+                    output_button.icon = self.UNCHECKED_ICON
+                QtCore.QTimer.singleShot(
+                    500, lambda: self.__reset_most_recently_set_button(
+                        output_button))
+
+    def __reset_most_recently_set_button(self, output_button):
+        if self.most_recently_set_button is not None:
+            self.most_recently_set_button.checked = False
+            self.most_recently_set_button.icon = self.UNCHECKED_ICON
+        self.most_recently_set_button = output_button
+
+    def __reset_buttons(self):
+        buttons_lists = []
+        for attr_name in dir(self):
+            attr = getattr(self, attr_name)
+            if attr_name.endswith('_buttons') and isinstance(attr, list):
+                buttons_lists.append(attr)
+        for buttons_list in buttons_lists:
+            for button in buttons_list:
+                button.checked = False
+                button.icon = self.UNCHECKED_ICON
 
     def __send_msg_btn_evt(self, btn=None, control_text=None):
         # get message from textbox
@@ -252,8 +313,9 @@ class EmulatorGUI(BaseWidget):
         else:
             message = f'trigger_input:{port_name}{port_number}:{val}{os.linesep}'
 
-        self.setup.board.proc.stdin.write(message.encode('utf-8'))
-        self.setup.board.proc.stdin.flush()
+        if not (self.setup.board.emulator_mode and (is_pwm or is_valve)):
+            self.setup.board.proc.stdin.write(message.encode('utf-8'))
+            self.setup.board.proc.stdin.flush()
 
     def __run_protocol_btn_evt(self):
         try:
