@@ -1,14 +1,15 @@
 import logging
 from AnyQt import QtCore
 from AnyQt import QtNetwork
-from pybpodapi.bpod.emulator import Emulator
+from .emulator_gui_server_error import EmulatorGUIServerError
 
 logger = logging.getLogger(__name__)
 
 
-class EmulatorModeServer(QtNetwork.QLocalServer):
-    signal_data_received = QtCore.pyqtSignal(object)
+class EmulatorGUIServer(QtNetwork.QLocalServer):
 
+    signal_data_received = QtCore.pyqtSignal(object)
+    NAME = 'gui_plugin_emulator_server'
     _SOCKET_TIMEOUT = 2000
 
     def __init__(self):
@@ -17,9 +18,9 @@ class EmulatorModeServer(QtNetwork.QLocalServer):
         self.newConnection.connect(self._handleConnection)
 
     def listen(self):
-        if not super().listen(Emulator.GUI_PLUGIN_SERVER_NAME):
-            raise RuntimeError(
-                f'Could not start server: {Emulator.GUI_PLUGIN_SERVER_NAME}')
+        if not super().listen(self.NAME):
+            raise EmulatorGUIServerError(
+                f'Could not start server: {self.NAME}')
 
     def close(self):
         super().close()
