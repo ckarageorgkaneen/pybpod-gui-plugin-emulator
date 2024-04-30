@@ -181,11 +181,10 @@ class EmulatorGUI(BaseWidget):
         self.set_margin(10)
         self.started_correctly = True
 
-        if self.setup.board.emulator_mode:
-            self._server = EmulatorGUIServer()
-            self._server.signal_data_received.connect(
-                self.__handleEmulatorGUIServerData)
-            self.most_recently_set_button = None
+        self._server = EmulatorGUIServer()
+        self._server.signal_data_received.connect(
+            self.__handleEmulatorGUIServerData)
+        self.most_recently_set_button = None
 
     def show(self):
         """
@@ -199,11 +198,10 @@ class EmulatorGUI(BaseWidget):
         self._selectedProtocol.value = self.setup.task.name
 
         self.init_form()
-        if self.setup.board.emulator_mode:
-            try:
-                self._server.listen()
-            except RuntimeError as e:
-                self.warning(str(e))
+        try:
+            self._server.listen()
+        except RuntimeError as e:
+            self.warning(str(e))
 
         super(BaseWidget, self).show()
 
@@ -224,8 +222,7 @@ class EmulatorGUI(BaseWidget):
         self._selectedBoard.value = board.name if board is not 0 else ''
 
     def closeEvent(self, event):
-        if self.setup.board.emulator_mode:
-            self._server.close()
+        self._server.close()
         self.__reset_buttons()
         super(EmulatorGUI, self).closeEvent(event)
 
